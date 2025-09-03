@@ -1,0 +1,28 @@
+{
+  "name": "birthday-card",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "keywords": [],
+  "author": "Isak Anderson <94191077+isakanderson-official@users.noreply.github.com>",
+  "license": "ISC",
+  "description": "Interactive birthday card for Dad",
+  "dependencies": {
+    "@tailwindcss/postcss": "^4.1.12",
+    "@types/node": "^24.3.0",
+    "@types/react": "^19.1.12",
+    "autoprefixer": "^10.4.21",
+    "framer-motion": "^12.23.12",
+    "next": "^15.5.2",
+    "postcss": "^8.5.6",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "tailwindcss": "^4.1.12",
+    "typescript": "^5.9.2"
+  }
+}
