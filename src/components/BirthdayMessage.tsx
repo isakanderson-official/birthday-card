@@ -1,34 +1,34 @@
-'use client'
+"use client";
 
-import { useState, useEffect } from 'react'
-import { motion } from 'framer-motion'
+import { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 
 interface BirthdayMessageProps {
-  age: number
+  age: number;
 }
 
 export default function BirthdayMessage({ age }: BirthdayMessageProps) {
-  const [displayedText, setDisplayedText] = useState('')
-  const [currentIndex, setCurrentIndex] = useState(0)
-  
-  const message = `Happy ${age}th Birthday, Dad! 
+  const [displayedText, setDisplayedText] = useState("");
+  const [currentIndex, setCurrentIndex] = useState(0);
 
-Thank you for all the years of wisdom, laughter, and love. You've been an incredible father and an amazing role model. Your jokes (even the really bad ones!) always bring a smile to our faces, and your guidance has shaped who we are today.
+  const message = `Happy Birthday, Dad! 
 
-Here's to celebrating another year of your wonderful life and all the memories we've created together. You're not just getting older – you're getting more distinguished!
+Thank you for all the love you consitantly show me. You've been an incredible father, something I'm truley greatful for.
 
-With all our love,
-Your Family ❤️`
+Here's to celebrating another year of your life and all the memories we've created together.
+
+Love You,
+Isak ❤️`;
 
   useEffect(() => {
     if (currentIndex < message.length) {
       const timer = setTimeout(() => {
-        setDisplayedText(prev => prev + message[currentIndex])
-        setCurrentIndex(prev => prev + 1)
-      }, 30)
-      return () => clearTimeout(timer)
+        setDisplayedText((prev) => prev + message[currentIndex]);
+        setCurrentIndex((prev) => prev + 1);
+      }, 30);
+      return () => clearTimeout(timer);
     }
-  }, [currentIndex, message])
+  }, [currentIndex, message]);
 
   return (
     <div className="text-center max-w-3xl mx-auto">
@@ -50,9 +50,7 @@ Your Family ❤️`
         className="bg-white/60 backdrop-blur-sm rounded-lg p-8 md:p-12 shadow-lg"
       >
         <div className="text-lg md:text-xl leading-relaxed text-gray-700 font-medium">
-          <span className="whitespace-pre-line">
-            {displayedText}
-          </span>
+          <span className="whitespace-pre-line">{displayedText}</span>
           {currentIndex < message.length && (
             <motion.span
               animate={{ opacity: [1, 0] }}
@@ -72,14 +70,14 @@ Your Family ❤️`
             className="mt-8 flex justify-center"
           >
             <div className="flex space-x-4 text-4xl">
-              {['🎉', '🎂', '🎈', '🎁', '❤️'].map((emoji, index) => (
+              {["🎉", "🎂", "🎈", "🎁", "❤️"].map((emoji, index) => (
                 <motion.span
                   key={index}
                   animate={{ y: [0, -10, 0] }}
-                  transition={{ 
-                    duration: 2, 
-                    repeat: Infinity, 
-                    delay: index * 0.2 
+                  transition={{
+                    duration: 2,
+                    repeat: Infinity,
+                    delay: index * 0.2,
                   }}
                 >
                   {emoji}
@@ -90,5 +88,5 @@ Your Family ❤️`
         )}
       </motion.div>
     </div>
-  )
+  );
 }
