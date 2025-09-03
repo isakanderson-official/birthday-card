@@ -27,14 +27,18 @@ export default function CandleBlow({ age }: CandleBlowProps) {
   // Initialize candles
   useEffect(() => {
     const newCandles: Candle[] = []
-    const candlesPerRow = Math.min(age, 10)
-    const rows = Math.ceil(age / candlesPerRow)
+    const maxCandlesPerRow = Math.min(age, 8) // Reduce max candles per row
+    const rows = Math.ceil(age / maxCandlesPerRow)
     
     for (let i = 0; i < age; i++) {
-      const row = Math.floor(i / candlesPerRow)
-      const col = i % candlesPerRow
-      const offsetX = (col - (candlesPerRow - 1) / 2) * 30
-      const offsetY = row * 25 - (rows - 1) * 12.5
+      const row = Math.floor(i / maxCandlesPerRow)
+      const col = i % maxCandlesPerRow
+      const candlesInThisRow = Math.min(maxCandlesPerRow, age - row * maxCandlesPerRow)
+      
+      // Better spacing calculation to keep candles on cake
+      const spacing = Math.min(20, 140 / candlesInThisRow) // Adaptive spacing
+      const offsetX = (col - (candlesInThisRow - 1) / 2) * spacing
+      const offsetY = row * 20 - (rows - 1) * 10 // Closer rows
       
       newCandles.push({
         id: i,
@@ -183,30 +187,50 @@ export default function CandleBlow({ age }: CandleBlowProps) {
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.8, delay: 0.3 }}
-        className="relative bg-gradient-to-b from-amber-100 to-amber-200 rounded-lg p-8 md:p-12 shadow-lg mb-8"
+        className="relative bg-gradient-to-b from-amber-50 to-amber-100 rounded-2xl p-8 md:p-12 shadow-xl mb-8"
       >
         {/* Cake Base */}
-        <div className="relative mx-auto" style={{ width: '300px', height: '200px' }}>
-          {/* Cake Layers */}
-          <div className="absolute bottom-0 w-full h-24 bg-gradient-to-r from-yellow-200 via-yellow-100 to-yellow-200 rounded-lg shadow-inner"></div>
-          <div className="absolute bottom-16 w-5/6 left-1/2 transform -translate-x-1/2 h-20 bg-gradient-to-r from-pink-200 via-pink-100 to-pink-200 rounded-lg shadow-inner"></div>
-          <div className="absolute bottom-28 w-2/3 left-1/2 transform -translate-x-1/2 h-16 bg-gradient-to-r from-blue-200 via-blue-100 to-blue-200 rounded-lg shadow-inner"></div>
+        <div className="relative mx-auto flex justify-center" style={{ width: '320px', height: '240px' }}>
+          {/* Cake Layers - Better proportions */}
+          <div className="relative">
+            {/* Bottom Layer */}
+            <div className="absolute bottom-0 w-60 h-20 bg-gradient-to-r from-yellow-300 via-yellow-200 to-yellow-300 rounded-lg shadow-lg border-2 border-yellow-400"
+                 style={{ left: '50%', transform: 'translateX(-50%)' }}>
+              {/* Frosting details */}
+              <div className="absolute top-0 w-full h-2 bg-gradient-to-r from-yellow-400 to-yellow-300 rounded-t-lg"></div>
+            </div>
+            
+            {/* Middle Layer */}
+            <div className="absolute bottom-16 w-48 h-18 bg-gradient-to-r from-pink-300 via-pink-200 to-pink-300 rounded-lg shadow-lg border-2 border-pink-400"
+                 style={{ left: '50%', transform: 'translateX(-50%)' }}>
+              <div className="absolute top-0 w-full h-2 bg-gradient-to-r from-pink-400 to-pink-300 rounded-t-lg"></div>
+            </div>
+            
+            {/* Top Layer */}
+            <div className="absolute bottom-28 w-36 h-16 bg-gradient-to-r from-blue-300 via-blue-200 to-blue-300 rounded-lg shadow-lg border-2 border-blue-400"
+                 style={{ left: '50%', transform: 'translateX(-50%)' }}>
+              <div className="absolute top-0 w-full h-2 bg-gradient-to-r from-blue-400 to-blue-300 rounded-t-lg"></div>
+            </div>
+          </div>
           
-          {/* Candles */}
-          <div className="absolute top-0 left-1/2 transform -translate-x-1/2">
+          {/* Candles - positioned on top of cake */}
+          <div className="absolute top-12 left-1/2 transform -translate-x-1/2">
             {candles.map((candle) => (
               <motion.div
                 key={candle.id}
                 className="absolute"
                 style={{
                   left: `${candle.x}px`,
-                  top: `${candle.y}px`,
+                  top: `${candle.y + 20}px`, // Offset to sit on cake top
                   transform: 'translate(-50%, -50%)'
                 }}
                 whileHover={{ scale: 1.1 }}
               >
                 {/* Candle */}
-                <div className="w-2 h-8 bg-gradient-to-b from-yellow-300 to-yellow-600 rounded-sm relative">
+                <div className="w-3 h-10 bg-gradient-to-b from-red-200 via-red-300 to-red-400 rounded-sm relative shadow-sm border border-red-400">
+                  {/* Candle wax drip */}
+                  <div className="absolute top-2 w-full h-1 bg-red-100 rounded-sm opacity-60"></div>
+                  
                   {/* Flame */}
                   <AnimatePresence>
                     {candle.isLit && (
@@ -215,32 +239,39 @@ export default function CandleBlow({ age }: CandleBlowProps) {
                         animate={{ scale: 1, opacity: 1 }}
                         exit={{ scale: 0, opacity: 0 }}
                         transition={{ duration: 0.2 }}
-                        className="absolute -top-3 left-1/2 transform -translate-x-1/2"
+                        className="absolute -top-4 left-1/2 transform -translate-x-1/2"
                       >
                         <motion.div
                           animate={{ 
-                            scale: [1, 1.1, 1],
-                            rotate: [-2, 2, -2]
+                            scale: [1, 1.2, 1],
+                            rotate: [-3, 3, -3],
+                            y: [0, -1, 0]
                           }}
                           transition={{ 
-                            duration: 1.5, 
+                            duration: 2, 
                             repeat: Infinity,
                             ease: "easeInOut"
                           }}
-                          className="w-3 h-4 bg-gradient-to-t from-orange-400 via-yellow-400 to-yellow-200 rounded-full"
-                        />
+                          className="relative"
+                        >
+                          {/* Flame core */}
+                          <div className="w-4 h-5 bg-gradient-to-t from-orange-500 via-yellow-400 to-yellow-200 rounded-full opacity-90"></div>
+                          {/* Flame glow */}
+                          <div className="absolute inset-0 w-6 h-6 bg-gradient-to-t from-orange-300 via-yellow-300 to-yellow-100 rounded-full opacity-30 -translate-x-1 -translate-y-1"></div>
+                        </motion.div>
                       </motion.div>
                     )}
                   </AnimatePresence>
+                  
                   {/* Smoke after blown out */}
                   <AnimatePresence>
                     {!candle.isLit && (
                       <motion.div
                         initial={{ opacity: 1, scale: 0.5 }}
-                        animate={{ opacity: 0, scale: 1, y: -20 }}
+                        animate={{ opacity: 0, scale: 1.5, y: -30 }}
                         exit={{ opacity: 0 }}
-                        transition={{ duration: 2 }}
-                        className="absolute -top-2 left-1/2 transform -translate-x-1/2 text-gray-400 text-xs"
+                        transition={{ duration: 3 }}
+                        className="absolute -top-3 left-1/2 transform -translate-x-1/2 text-gray-400 text-lg"
                       >
                         💨
                       </motion.div>
